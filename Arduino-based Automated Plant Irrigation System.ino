@@ -1,64 +1,45 @@
 /*
- * Here is the code for Arduino-based Automated Plant Irrigation System Using arduino Uno
+ * Here is the code for Arduino-based Automated Plant Irrigation System Using Arduino Uno
  */
 
-int moistureSensor = 0;
-int motor = 2;
-#include<LiquidCrystal.h>
-LiquidCrystal lcd(12,11,6,5,4,3);
+int soilMoistureValue = 0;
+
+int percentage=0;
+
 void setup() {
-Serial.begin(9600);
-lcd.begin(16,2);
-pinMode(motor,OUTPUT);
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("    WEL-COME ");
-  delay(2000);
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("PLANT IRRIGATION");
-  lcd.setCursor(0,1);
-  lcd.print("     SYSTEM");
-  delay(3000);
-  lcd.clear();
-  int SensorValue = analogRead(moistureSensor);
-  if(SensorValue >=400)
-{
-lcd.setCursor(0,0);
-lcd.print("STATUS ....");   
-lcd.setCursor(0,1);
-lcd.print("        DRY SOIL");
-delay(5000);
-lcd.clear();
-} 
-else
-{ 
- lcd.setCursor(0,0);
-lcd.print("STATUS ....");
-lcd.setCursor(0,1);
-lcd.print("      HUMID SOIL");
-delay(5000);
-lcd.clear(); 
-}
- }
-void loop(){
 
-  int SensorValue = analogRead(moistureSensor);
-  lcd.setCursor(0,0);
-  lcd.print("SENSOR VAL =");
-  lcd.println(SensorValue);
+  pinMode(3,OUTPUT);
 
-if(SensorValue >=400)
-{
-   
-digitalWrite(motor,HIGH);
-lcd.setCursor(0,1);
-lcd.print("   *WATERING* ");
-} 
-else
-{ 
-digitalWrite(motor,LOW);
-lcd.setCursor(0,1);
-lcd.print(" *NOT WATERING*"); 
+  Serial.begin(9600);
+
 }
- }
+
+void loop() {
+
+soilMoistureValue = analogRead(A0);
+
+Serial.println(percentage);
+
+percentage = map(soilMoistureValue, 490, 1023, 100, 0);
+
+if(percentage < 10)  
+
+{
+
+  Serial.println(" pump on");
+
+  digitalWrite(3,LOW);
+
+}
+
+if(percentage >80)
+
+{
+
+  Serial.println("pump off");
+
+  digitalWrite(3,HIGH);
+
+}
+
+}
